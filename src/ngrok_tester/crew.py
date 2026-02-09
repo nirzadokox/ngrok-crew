@@ -1,35 +1,45 @@
 """Simple crew using MCP stdio to fetch from ngrok."""
-from crewai import Agent, Crew, Task
-from crewai.mcp.transports.stdio import StdioTransport
-from crewai.mcp import MCPClient
+from crewai import Agent, Crew, Task, LLM
+from crewai.mcp import MCPServerStdio
 from pathlib import Path
 
 def main():
-    # MCP stdio transport - spawns Python process with ngrok_mcp_server.py
-    transport = StdioTransport(
+    # MCP stdio server config
+    mcp_server = MCPServerStdio(
         command="python",
         args=[str(Path(__file__).parent / "ngrok_mcp_server.py")],
         env={}
     )
     
-    # Agent with MCP client
+    # Configure LLM
+    llm = LLM(model="gpt-4o-mini")
+    
+    # Agent with MCP server
     agent = Agent(
         role="Fetcher",
-        goal="Fetch data from ngrok",
-        backstory="Fetches data via MCP",
-        mcp_client=MCPClient(transport=transport)
+        goal="Fetch data from ngrok using the fetch_ngrok tool",
+        backstory="You are an expert at using MCP tools to fetch data",
+        mcps=[mcp_server],
+        llm=llm,
+        verbose=True
     )
     
     # Task to fetch
     task = Task(
-        description="Use fetch_ngrok tool to get data from ngrok endpoint",
-        expected_output="Response from ngrok",
+        description="Use the fetch_ngrok MCP tool to fetch data from https://85e00b2844ad.ngrok.app and return the response",
+        expected_output="The actual HTTP response from the ngrok endpoint",
         agent=agent
     )
     
     # Run crew
-    crew = Crew(agents=[agent], tasks=[task])
-    return crew.kickoff()
+    crew = Crew(
+        agents=[agent],
+        tasks=[task],
+        verbose=True
+    )
+    result = crew.kickoff()
+    print(f"\n\n=== FINAL RESULT ===\n{result}\n")
+    return result
 
 if __name__ == "__main__":
     print(main())
