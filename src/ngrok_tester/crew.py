@@ -11,16 +11,12 @@ def main():
         env={}
     )
     
-    # Configure LLM
-    llm = LLM(model="gpt-4o-mini")
-    
-    # Agent with MCP server
+    # Agent with MCP server (LLM will use configured connection from dashboard)
     agent = Agent(
         role="Fetcher",
         goal="Fetch data from ngrok using the fetch_ngrok tool",
         backstory="You are an expert at using MCP tools to fetch data",
         mcps=[mcp_server],
-        llm=llm,
         verbose=True
     )
     
