@@ -1,11 +1,10 @@
 [project]
 name = "ngrok-tester"
-version = "1.0.0"
-description = "Crew to test ngrok endpoint via MCP stdio"
+version = "1.0.1"
+description = "Crew to test ngrok endpoint via simple HTTP tool"
 requires-python = ">=3.10"
 dependencies = [
     "httpx>=0.27.0",
-    "mcp>=1.0.0",
     "crewai>=0.80.0",
 ]
 
