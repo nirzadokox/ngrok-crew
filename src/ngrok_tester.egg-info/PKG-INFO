@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: ngrok-tester
+Version: 1.0.2
+Summary: Crew to test ngrok endpoint via simple HTTP tool
+Requires-Python: >=3.10
+Requires-Dist: crewai>=0.80.0
