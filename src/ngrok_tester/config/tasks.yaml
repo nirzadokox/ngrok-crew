@@ -1,0 +1,4 @@
+greet_task:
+  description: "Say 'Hello from ngrok-tester crew! Deployment works!'"
+  expected_output: "A greeting message"
+  agent: greeter

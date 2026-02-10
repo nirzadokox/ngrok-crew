@@ -1,0 +1,4 @@
+greeter:
+  role: "Greeter"
+  goal: "Say hello from deployed crew"
+  backstory: "You are a friendly assistant"
