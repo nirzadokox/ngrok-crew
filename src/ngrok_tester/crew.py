@@ -1,7 +1,8 @@
 """Simple crew using HTTP tool to fetch from ngrok."""
 from crewai import Agent, Crew, Task
 from crewai.tools import BaseTool
-import httpx
+import urllib.request
+import ssl
 
 class FetchNgrokTool(BaseTool):
     name: str = "fetch_ngrok"
@@ -10,9 +11,11 @@ class FetchNgrokTool(BaseTool):
     def _run(self) -> str:
         """Fetch from ngrok endpoint."""
         try:
-            with httpx.Client(timeout=30) as client:
-                resp = client.get("https://85e00b2844ad.ngrok.app")
-                return f"Status: {resp.status_code}\nBody: {resp.text[:500]}"
+            ctx = ssl.create_default_context()
+            req = urllib.request.Request("https://85e00b2844ad.ngrok.app")
+            with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
+                body = resp.read().decode('utf-8')[:500]
+                return f"Status: {resp.status}\nBody: {body}"
         except Exception as e:
             return f"Error: {str(e)}"
 
